@@ -10,6 +10,9 @@ export const env = createEnv({
     AUTH_GITHUB_ID: z.string().min(1),
     AUTH_GITHUB_SECRET: z.string().min(1),
     AUTH_SECRET: z.string().min(1),
+    DOMAIN: z.string().min(1),
+    AFTER_SIGN_IN: z.string(),
+    PROTOCOL: z.string().min(1),
   },
   /*
    * Environment variables available on the client (and server).
@@ -24,8 +27,11 @@ export const env = createEnv({
    * 💡 You'll get type errors if not all variables from `server` & `client` are included here.
    */
   runtimeEnv: {
-    AUTH_GITHUB_ID: process.env.GITHUB_ID,
-    AUTH_GITHUB_SECRET: process.env.GITHUB_SECRET,
-    AUTH_SECRET: process.env.NEXTAUTH_SECRET,
+    AUTH_GITHUB_ID: process.env.AUTH_GITHUB_ID,
+    AUTH_GITHUB_SECRET: process.env.AUTH_GITHUB_SECRET,
+    AUTH_SECRET: process.env.AUTH_SECRET,
+    DOMAIN: process.env.DOMAIN,
+    AFTER_SIGN_IN: process.env.AFTER_SIGN_IN,
+    PROTOCOL: process.env.PROTOCOL,
   },
 });

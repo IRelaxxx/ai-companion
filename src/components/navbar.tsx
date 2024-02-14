@@ -1,4 +1,4 @@
-import { Menu, Sparkles } from "lucide-react";
+import { Sparkles } from "lucide-react";
 import { Poppins } from "next/font/google";
 import Link from "next/link";
 
@@ -6,6 +6,7 @@ import { cn } from "@/lib/utils";
 import UserButton from "@/components/auth/user-button";
 import { Button } from "@/components/ui/button";
 import { ModeToggle } from "./mode-toggle";
+import MobileSidebar from "./mobile-sidebar";
 
 const font = Poppins({
   weight: "600",
@@ -14,9 +15,9 @@ const font = Poppins({
 
 export default function Navbar() {
   return (
-    <div className="fixed w-full z-50 flex justify-between items-center py-2 px-4 border-b border-primary/10 bg-secondary">
+    <div className="fixed w-full z-50 flex justify-between items-center py-2 px-4 border-b border-primary/10 bg-secondary h-16">
       <div className="flex items-center">
-        <Menu className="block md:hidden" />
+        <MobileSidebar />
         <Link href="/">
           <h1
             className={cn(

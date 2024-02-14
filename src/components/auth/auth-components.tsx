@@ -1,17 +1,13 @@
-import { signIn, signOut } from "@/auth";
-import { Button } from "./ui/button";
+import { Button } from "../ui/button";
+import { SignInAction, SignOutAction } from "./user-buttons.server";
 
 export function SignIn({
   provider,
   ...props
 }: { provider?: string } & React.ComponentPropsWithRef<typeof Button>) {
   return (
-    <form
-      action={async () => {
-        "use server";
-        await signIn(provider, { redirectTo: "/" });
-      }}
-    >
+    <form action={SignInAction}>
+      <input type="hidden" value={provider} name="provider"></input>
       <Button {...props}>Sign In</Button>
     </form>
   );
@@ -19,13 +15,7 @@ export function SignIn({
 
 export function SignOut(props: React.ComponentPropsWithRef<typeof Button>) {
   return (
-    <form
-      action={async () => {
-        "use server";
-        await signOut();
-      }}
-      className="w-full"
-    >
+    <form action={SignOutAction} className="w-full">
       <Button variant="ghost" className="w-full p-0" {...props}>
         Sign Out
       </Button>

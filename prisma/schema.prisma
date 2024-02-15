@@ -2,7 +2,8 @@
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
 generator client {
-  provider = "prisma-client-js"
+  provider        = "prisma-client-js"
+  previewFeatures = ["fullTextSearch", "fullTextIndex"]
 }
 
 datasource db {
@@ -12,6 +13,27 @@ datasource db {
 }
 
 model Category {
-  id   String @id @default(uuid())
-  name String
+  id        String      @id @default(uuid())
+  name      String
+  Companion Companion[]
+}
+
+model Companion {
+  id           String @id @default(uuid())
+  userId       String
+  userName     String
+  src          String
+  name         String // @db.Text // @db.Text not supported on sqlite
+  description  String
+  instructions String // @db.Text // @db.Text not supported on sqlite
+  seed         String // @db.Text // @db.Text not supported on sqlite
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  category   Category @relation(fields: [categoryId], references: [id])
+  categoryId String
+
+  @@index([categoryId]) // planetscale only because of tutorial
+  @@fulltext([name])
 }

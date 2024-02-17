@@ -1,7 +1,6 @@
 import type { AdapterAccount } from '@auth/core/adapters';
 import { type InferSelectModel, relations, sql } from 'drizzle-orm';
 import {
-  bigint,
   char,
   index,
   int,
@@ -11,20 +10,25 @@ import {
   timestamp,
   varchar,
 } from 'drizzle-orm/mysql-core';
+import { v4 as uuidv4 } from 'uuid';
 
 export const createTable = mysqlTableCreator((name) => `ai_companion_${name}`);
 
 export const categories = createTable('categories', {
-  id: bigint('id', { mode: 'number' }).primaryKey().autoincrement(),
+  id: char('id', { length: 36 })
+    .primaryKey()
+    .$defaultFn(() => uuidv4()),
   name: varchar('name', { length: 32 }).notNull(),
 });
 
 // ALTER TABLE ai_companion_companions ADD FULLTEXT INDEX `companions_name_fulltext_idx`(name);
 export const companions = createTable('companions', {
-  id: bigint('id', { mode: 'number' }).primaryKey().autoincrement(),
+  id: char('id', { length: 36 })
+    .primaryKey()
+    .$defaultFn(() => uuidv4()),
   userId: char('userId', { length: 36 }).notNull(),
   username: varchar('userName', { length: 32 }).notNull(),
-  src: varchar('src', { length: 32 }).notNull(),
+  src: varchar('src', { length: 65 }).notNull(),
   name: text('name').notNull(),
   description: varchar('description', { length: 256 }).notNull(),
   instructions: text('instructions').notNull(),
@@ -33,7 +37,7 @@ export const companions = createTable('companions', {
     .default(sql`CURRENT_TIMESTAMP`)
     .notNull(),
   updatedAt: timestamp('updatedAt').onUpdateNow(),
-  category: bigint('category', { mode: 'number' }).notNull(),
+  category: char('category', { length: 36 }).notNull(),
 });
 
 export const companionRelations = relations(companions, ({ one }) => ({

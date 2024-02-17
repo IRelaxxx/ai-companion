@@ -11,3 +11,5 @@ With the following changes:
 - uploadthing instead of cloudinary
 
 - .env validation using `@t3-oss/env-nextjs`
+
+- server actions instead of api routes

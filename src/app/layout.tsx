@@ -7,6 +7,7 @@ import './globals.css';
 
 import { ourFileRouter } from '@/app/api/uploadthing/core';
 import { ThemeProvider } from '@/components/theme-provider';
+import { Toaster } from '@/components/ui/toaster';
 import { cn } from '@/lib/utils';
 
 const inter = Inter({ subsets: ['latin'] });
@@ -40,6 +41,7 @@ export default function RootLayout({
           disableTransitionOnChange
         >
           {children}
+          <Toaster />
         </ThemeProvider>
       </body>
     </html>

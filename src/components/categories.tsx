@@ -16,7 +16,7 @@ export default function Categories({ data }: CategoriesProps) {
 
   const categoryId = searchParams.get('category');
 
-  const onClick = (id: number | undefined) => {
+  const onClick = (id: string | undefined) => {
     const query = { category: id };
     const url = qs.stringifyUrl(
       {

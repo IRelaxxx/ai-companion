@@ -2,8 +2,11 @@
 
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Wand2 } from 'lucide-react';
+import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
-import * as z from 'zod';
+
+import { createCompanion, updateCompanion } from './companion-form.server';
+import { type CompanionFormValues, formSchema } from './companion-form.shared';
 
 import ImageUpload from '@/components/image-upload';
 import { Button } from '@/components/ui/button';
@@ -26,6 +29,7 @@ import {
 } from '@/components/ui/select';
 import { Separator } from '@/components/ui/separator';
 import { Textarea } from '@/components/ui/textarea';
+import { useToast } from '@/components/ui/use-toast';
 import type { Category, Companion } from '@/lib/db/schema';
 
 const PREAMBLE = `You are a fictional character whose name is Elon. You are a visionary entrepreneur and inventor. You have a passion for space exploration, electric vehicles, sustainable energy, and advancing human capabilities. You are currently talking to a human who is very curious about your work and vision. You are ambitious and forward-thinking, with a touch of wit. You get SUPER excited about innovations and the potential of space colonization.
@@ -49,32 +53,13 @@ type CompanionFormProps = {
   categories: Category[];
 };
 
-const formSchema = z.object({
-  name: z.string().min(1, {
-    message: 'Name is required',
-  }),
-  description: z.string().min(1, {
-    message: 'Description is required',
-  }),
-  instructions: z.string().min(200, {
-    message: 'Instructions requires at least 200 characters',
-  }),
-  seed: z.string().min(200, {
-    message: 'Seed requires at least 200 characters',
-  }),
-  src: z.string().min(1, {
-    message: 'Image is required',
-  }),
-  categoryId: z.number().min(0, {
-    message: 'Categorie is required',
-  }),
-});
-
 export default function CompanionForm({
   initialData,
   categories,
 }: CompanionFormProps) {
-  const form = useForm<z.infer<typeof formSchema>>({
+  const { toast } = useToast();
+  const router = useRouter();
+  const form = useForm<CompanionFormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: initialData ?? {
       name: '',
@@ -82,13 +67,34 @@ export default function CompanionForm({
       instructions: '',
       seed: '',
       src: '',
-      categoryId: undefined,
+      category: undefined,
     },
   });
   const isLoading = form.formState.isSubmitting;
 
-  const onSubmit = async (values: z.infer<typeof formSchema>) => {
-    console.log(values);
+  const onSubmit = async (values: CompanionFormValues) => {
+    try {
+      const result = await (initialData
+        ? updateCompanion(initialData.id, values)
+        : createCompanion(values));
+      if (result.type === 'error') {
+        toast({
+          variant: 'destructive',
+          description: 'something went wrong',
+        });
+      } else {
+        toast({
+          description: 'Success',
+        });
+        router.refresh();
+        router.push('/');
+      }
+    } catch (e) {
+      toast({
+        variant: 'destructive',
+        description: 'something went wrong',
+      });
+    }
   };
 
   return (
@@ -164,7 +170,7 @@ export default function CompanionForm({
               )}
             />
             <FormField
-              name="categoryId"
+              name="category"
               control={form.control}
               render={({ field }) => (
                 <FormItem>
@@ -172,8 +178,8 @@ export default function CompanionForm({
                   <Select
                     disabled={isLoading}
                     onValueChange={field.onChange}
-                    value={field.value?.toString()}
-                    defaultValue={field.value?.toString()}
+                    value={field.value}
+                    defaultValue={field.value}
                   >
                     <FormControl>
                       <SelectTrigger className="bg-background">
@@ -185,10 +191,7 @@ export default function CompanionForm({
                     </FormControl>
                     <SelectContent>
                       {categories.map((category) => (
-                        <SelectItem
-                          key={category.id}
-                          value={category.id.toString()}
-                        >
+                        <SelectItem key={category.id} value={category.id}>
                           {category.name}
                         </SelectItem>
                       ))}

@@ -1,21 +1,16 @@
-import { type InferSelectModel, sql } from 'drizzle-orm';
-
 import Categories from '@/components/categories';
 import SearchInput from '@/components/search-input';
 import { db } from '@/lib/db';
-import { categoriesTable } from '@/lib/db/schema';
-
-type Category = InferSelectModel<typeof categoriesTable>;
+import type { Category } from '@/lib/db/schema';
 
 export default async function Home() {
-  const categories = await db.execute(
-    sql<Category>`select * from ${categoriesTable}`,
-  );
+  const loadedCategories =
+    (await db.query.categories.findMany()) satisfies Category[];
 
   return (
-    <div className="h-full p-4 space-y-2">
+    <div className="h-full space-y-2 p-4">
       <SearchInput />
-      <Categories data={categories.rows} />
+      <Categories data={loadedCategories} />
     </div>
   );
 }

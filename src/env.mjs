@@ -14,6 +14,8 @@ export const env = createEnv({
     AFTER_SIGN_IN: z.string(),
     PROTOCOL: z.string().min(1),
     DATABASE_URL: z.string().min(1),
+    UPLOADTHING_SECRET: z.string().min(1),
+    UPLOADTHING_APP_ID: z.string().min(1),
     NODE_ENV: z.string().optional(),
   },
   /*
@@ -36,6 +38,8 @@ export const env = createEnv({
     AFTER_SIGN_IN: process.env.AFTER_SIGN_IN,
     PROTOCOL: process.env.PROTOCOL,
     DATABASE_URL: process.env.DATABASE_URL,
+    UPLOADTHING_SECRET: process.env.UPLOADTHING_SECRET,
+    UPLOADTHING_APP_ID: process.env.UPLOADTHING_APP_ID,
     NODE_ENV: process.env.NODE_ENV,
   },
 });

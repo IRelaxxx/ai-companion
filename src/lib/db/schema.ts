@@ -1,5 +1,5 @@
-import { AdapterAccount } from '@auth/core/adapters';
-import { relations, sql } from 'drizzle-orm';
+import type { AdapterAccount } from '@auth/core/adapters';
+import { type InferSelectModel, relations, sql } from 'drizzle-orm';
 import {
   bigint,
   char,
@@ -7,7 +7,6 @@ import {
   int,
   mysqlTableCreator,
   primaryKey,
-  serial,
   text,
   timestamp,
   varchar,
@@ -15,12 +14,13 @@ import {
 
 export const createTable = mysqlTableCreator((name) => `ai_companion_${name}`);
 
-export const categoriesTable = createTable('categories', {
+export const categories = createTable('categories', {
   id: bigint('id', { mode: 'number' }).primaryKey().autoincrement(),
   name: varchar('name', { length: 32 }).notNull(),
 });
 
-export const companionsTable = createTable('companions', {
+// ALTER TABLE ai_companion_companions ADD FULLTEXT INDEX `companions_name_fulltext_idx`(name);
+export const companions = createTable('companions', {
   id: bigint('id', { mode: 'number' }).primaryKey().autoincrement(),
   userId: char('userId', { length: 36 }).notNull(),
   username: varchar('userName', { length: 32 }).notNull(),
@@ -36,10 +36,10 @@ export const companionsTable = createTable('companions', {
   category: bigint('category', { mode: 'number' }).notNull(),
 });
 
-export const companionRelations = relations(companionsTable, ({ one }) => ({
-  category: one(categoriesTable, {
-    fields: [companionsTable.category],
-    references: [categoriesTable.id],
+export const companionRelations = relations(companions, ({ one }) => ({
+  category: one(categories, {
+    fields: [companions.category],
+    references: [categories.id],
   }),
 }));
 
@@ -70,12 +70,12 @@ export const accounts = createTable(
       .notNull(),
     provider: varchar('provider', { length: 255 }).notNull(),
     providerAccountId: varchar('providerAccountId', { length: 255 }).notNull(),
-    refresh_token: text('refresh_token'),
-    access_token: text('access_token'),
+    refresh_token: varchar('refresh_token', { length: 255 }),
+    access_token: varchar('access_token', { length: 255 }),
     expires_at: int('expires_at'),
     token_type: varchar('token_type', { length: 255 }),
     scope: varchar('scope', { length: 255 }),
-    id_token: text('id_token'),
+    id_token: varchar('id_token', { length: 2048 }),
     session_state: varchar('session_state', { length: 255 }),
   },
   (account) => ({
@@ -119,3 +119,6 @@ export const verificationTokens = createTable(
     compoundKey: primaryKey({ columns: [vt.identifier, vt.token] }),
   }),
 );
+
+export type Companion = InferSelectModel<typeof companions>;
+export type Category = InferSelectModel<typeof categories>;

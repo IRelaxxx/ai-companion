@@ -1,9 +1,9 @@
 'use client';
 
-import { Category } from '@prisma/client';
 import { useRouter, useSearchParams } from 'next/navigation';
 import qs from 'query-string';
 
+import type { Category } from '@/lib/db/schema';
 import { cn } from '@/lib/utils';
 
 type CategoriesProps = {
@@ -16,7 +16,7 @@ export default function Categories({ data }: CategoriesProps) {
 
   const categoryId = searchParams.get('category');
 
-  const onClick = (id: string | undefined) => {
+  const onClick = (id: number | undefined) => {
     const query = { category: id };
     const url = qs.stringifyUrl(
       {
@@ -29,11 +29,11 @@ export default function Categories({ data }: CategoriesProps) {
     router.push(url);
   };
   return (
-    <div className="w-full overflow-x-auto space-x-2 flex p-1">
+    <div className="flex w-full space-x-2 overflow-x-auto p-1">
       <button
         onClick={() => onClick(undefined)}
         className={cn(
-          'flex items-center text-center text-xs md:text-sm px-2 md:px-4 py-2 md:py-3 rounded-md bg-primary/10 hover:opacity-75 transition',
+          'flex items-center rounded-md bg-primary/10 px-2 py-2 text-center text-xs transition hover:opacity-75 md:px-4 md:py-3 md:text-sm',
           !categoryId ? 'bg-primary/25' : 'bg-primary/10',
         )}
       >
@@ -44,8 +44,10 @@ export default function Categories({ data }: CategoriesProps) {
           onClick={() => onClick(item.id)}
           key={item.id}
           className={cn(
-            'flex items-center text-center text-xs md:text-sm px-2 md:px-4 py-2 md:py-3 rounded-md bg-primary/10 hover:opacity-75 transition',
-            item.id === categoryId ? 'bg-primary/25' : 'bg-primary/10',
+            'flex items-center rounded-md bg-primary/10 px-2 py-2 text-center text-xs transition hover:opacity-75 md:px-4 md:py-3 md:text-sm',
+            item.id.toString() === categoryId
+              ? 'bg-primary/25'
+              : 'bg-primary/10',
           )}
         >
           {item.name}

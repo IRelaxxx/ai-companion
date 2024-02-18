@@ -8,6 +8,7 @@ import {
   varchar,
 } from 'drizzle-orm/mysql-core';
 
+import { messages } from '@/lib/db/schema/app';
 import { createTable } from '@/lib/db/schema/util';
 
 export const users = createTable('user', {
@@ -24,6 +25,7 @@ export const users = createTable('user', {
 export const usersRelations = relations(users, ({ many }) => ({
   accounts: many(accounts),
   sessions: many(sessions),
+  messages: many(messages),
 }));
 
 export const accounts = createTable(

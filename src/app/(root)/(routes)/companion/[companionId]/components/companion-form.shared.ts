@@ -17,7 +17,7 @@ export const formSchema = z.object({
   src: z.string().min(1, {
     message: 'Image is required',
   }),
-  category: z.string().min(1, {
+  categoryId: z.string().min(1, {
     message: 'Category is required',
   }),
 });

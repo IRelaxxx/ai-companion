@@ -40,7 +40,7 @@ export async function updateCompanion(
       };
     }
 
-    const { src, name, description, instructions, seed, category } = values;
+    const { src, name, description, instructions, seed, categoryId } = values;
     const result = await db
       .update(companions)
       .set({
@@ -49,7 +49,7 @@ export async function updateCompanion(
         description,
         instructions,
         seed,
-        category,
+        categoryId,
       })
       .where(
         sql`${companions.id} = ${id} AND ${companions.userId} = ${user.user.id}`,
@@ -93,14 +93,14 @@ export async function createCompanion(
       };
     }
 
-    const { src, name, description, instructions, seed, category } = values;
+    const { src, name, description, instructions, seed, categoryId } = values;
     const result = await db.insert(companions).values({
       src,
       name,
       description,
       instructions,
       seed,
-      category,
+      categoryId,
       userId: user.user.id,
       username: user.user.name,
     });

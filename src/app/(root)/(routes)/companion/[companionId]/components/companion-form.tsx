@@ -67,7 +67,7 @@ export default function CompanionForm({
       instructions: '',
       seed: '',
       src: '',
-      category: undefined,
+      categoryId: undefined,
     },
   });
   const isLoading = form.formState.isSubmitting;
@@ -170,7 +170,7 @@ export default function CompanionForm({
               )}
             />
             <FormField
-              name="category"
+              name="categoryId"
               control={form.control}
               render={({ field }) => (
                 <FormItem>

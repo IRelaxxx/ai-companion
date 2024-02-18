@@ -1,5 +1,5 @@
 import { db } from '@/lib/db';
-import { categories } from '@/lib/db/schema';
+import { categories } from '@/lib/db/schema/app';
 
 const categoryValues = [
   { name: 'Famous People' },

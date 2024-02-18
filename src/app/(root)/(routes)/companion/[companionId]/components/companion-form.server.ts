@@ -6,7 +6,7 @@ import { type CompanionFormValues, formSchema } from './companion-form.shared';
 
 import { auth } from '@/lib/auth';
 import { db } from '@/lib/db';
-import { type Companion, companions } from '@/lib/db/schema';
+import { type Companion, companions } from '@/lib/db/schema/app';
 
 type ResponseType =
   | {

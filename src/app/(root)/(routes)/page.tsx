@@ -1,7 +1,7 @@
 import Categories from '@/components/categories';
 import SearchInput from '@/components/search-input';
 import { db } from '@/lib/db';
-import type { Category } from '@/lib/db/schema';
+import type { Category } from '@/lib/db/schema/app';
 
 export default async function Home() {
   const loadedCategories =

@@ -3,7 +3,7 @@ import { sql } from 'drizzle-orm';
 import CompanionForm from './components/companion-form';
 
 import { db } from '@/lib/db';
-import { type Category, type Companion, companions } from '@/lib/db/schema';
+import { type Category, type Companion, companions } from '@/lib/db/schema/app';
 
 type CompanionIdProps = {
   params: {

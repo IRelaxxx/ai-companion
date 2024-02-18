@@ -4,7 +4,7 @@ import { DrizzleAdapter } from '@auth/drizzle-adapter';
 import NextAuth from 'next-auth';
 
 import { db } from '@/lib/db';
-import { createTable } from '@/lib/db/schema';
+import { createTable } from '@/lib/db/schema/util';
 
 export const authConfig = {
   adapter: DrizzleAdapter(db, createTable) as Adapter,

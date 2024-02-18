@@ -3,7 +3,7 @@
 import { useRouter, useSearchParams } from 'next/navigation';
 import qs from 'query-string';
 
-import type { Category } from '@/lib/db/schema';
+import type { Category } from '@/lib/db/schema/app';
 import { cn } from '@/lib/utils';
 
 type CategoriesProps = {

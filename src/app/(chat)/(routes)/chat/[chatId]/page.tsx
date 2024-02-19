@@ -52,7 +52,7 @@ export default async function ChatIdPage({ params }: ChatIdPageProps) {
     <SessionProvider session={session}>
       <ChatClient
         companion={companion}
-        messages={companionMessages}
+        companionMessages={companionMessages}
         messageCount={messageCount[0].messageCount}
       />
     </SessionProvider>

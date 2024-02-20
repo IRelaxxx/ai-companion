@@ -26,10 +26,6 @@ export default async function CompanionIdPage({ params }: CompanionIdProps) {
     ),
   })) satisfies Companion | undefined;
 
-  if (!companion) {
-    redirect('/');
-  }
-
   const categories =
     (await db.query.categories.findMany()) satisfies Category[];
 

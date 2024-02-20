@@ -22,7 +22,9 @@ export class MemoryManager {
       url: env.UPSTASH_REDIS_REST_URL,
       token: env.UPSTASH_REDIS_REST_TOKEN,
     });
-    this.vectorDbClient = new ChromaClient();
+    this.vectorDbClient = new ChromaClient({
+      path: env.CHROMA_URL,
+    });
   }
 
   public async init() {

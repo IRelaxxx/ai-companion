@@ -40,8 +40,10 @@ export default async function Home({ searchParams }: RootPageProps) {
       and(
         searchParams.categoryId && searchParams.categoryId !== ''
           ? eq(companions.categoryId, searchParams.categoryId)
-          : sql`true`,
-        sql`lower(${companions.name}) like ${`%${searchParams.name?.toLowerCase()}%`}`,
+          : undefined,
+        searchParams.name && searchParams.name !== ''
+          ? sql`lower(${companions.name}) like ${`%${searchParams.name.toLowerCase()}%`}`
+          : undefined,
       ),
     )
     .groupBy(companions.id)

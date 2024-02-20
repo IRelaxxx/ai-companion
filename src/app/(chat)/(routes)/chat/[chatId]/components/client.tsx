@@ -3,6 +3,7 @@
 import { useCompletion } from 'ai/react';
 import { useRouter } from 'next/navigation';
 import { type FormEvent, useState } from 'react';
+import { v4 as uuidv4 } from 'uuid';
 
 import ChatForm from '@/components/chat-from';
 import ChatHeader from '@/components/chat-header';
@@ -32,6 +33,7 @@ export default function ChatClient({
         const systemMessage = {
           role: 'system',
           content: completion,
+          id: uuidv4(),
         } as const;
 
         setMessages((current) => [...current, systemMessage]);
@@ -45,6 +47,7 @@ export default function ChatClient({
     const userMessage = {
       role: 'user',
       content: input,
+      id: uuidv4(),
     } as const;
 
     setMessages((current) => [...current, userMessage]);

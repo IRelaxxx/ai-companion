@@ -18,7 +18,10 @@ export class MemoryManager {
   private vectorStore!: ChromaStore;
 
   public constructor() {
-    this.history = Redis.fromEnv();
+    this.history = new Redis({
+      url: env.UPSTASH_REDIS_REST_URL,
+      token: env.UPSTASH_REDIS_REST_TOKEN,
+    });
     this.vectorDbClient = new ChromaClient();
   }
 
@@ -94,6 +97,7 @@ export class MemoryManager {
     }
 
     const key = this.generateRedisCompanionKey(companionKey);
+
     let result = await this.history.zrange(key, 0, Date.now(), {
       byScore: true,
     });

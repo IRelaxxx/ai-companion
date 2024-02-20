@@ -14,6 +14,7 @@ export type ChatMessageProps = {
   content?: string;
   isLoading?: boolean;
   src?: string;
+  id?: string;
 };
 
 export default function ChatMessage({

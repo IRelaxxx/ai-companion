@@ -41,10 +41,10 @@ export default function ChatMessages({
       />
       {messages.map((message) => (
         <ChatMessage
-          key={message.content}
+          key={message.id ?? message.content}
           role={message.role}
           content={message.content}
-          src={message.src}
+          src={companion.src}
         />
       ))}
       {isLoading && <ChatMessage role="system" src={companion.src} isLoading />}

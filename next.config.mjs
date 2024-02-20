@@ -19,6 +19,13 @@ const nextConfig = {
       sharp: 'commonjs sharp',
       'onnxruntime-node': 'commonjs onnxruntime-node',
     });
+    config.module.rules = config.module.rules.map((rule) => {
+      if (rule.loader === 'babel-loader') {
+        rule.options.cacheDirectory = false;
+      }
+      return rule;
+    });
+
     return config;
   },
 };

@@ -1,6 +1,5 @@
-import { and, eq, sql } from 'drizzle-orm';
+import { and, eq } from 'drizzle-orm';
 import { redirect } from 'next/navigation';
-import { userAgent } from 'next/server';
 
 import CompanionForm from './components/companion-form';
 

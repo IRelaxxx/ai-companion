@@ -1,8 +1,8 @@
 import { Replicate } from '@langchain/community/llms/replicate';
 import { LangChainStream, StreamingTextResponse } from 'ai';
 import { eq } from 'drizzle-orm';
-import { CallbackManager } from 'langchain/callbacks';
 import { NextResponse } from 'next/server';
+import { Readable } from 'node:stream';
 
 import { env } from '@/env.mjs';
 import { auth } from '@/lib/auth';
@@ -82,28 +82,26 @@ export async function POST(
       model:
         'a16z-infra/llama-2-13b-chat:df7690f1994d94e96ad9d568eac121aecf50684a0b0963b25a41cc40061269e5',
       input: {
-        max_length: 2048,
+        max_length: 8192,
       },
       apiKey: env.REPLICATE_API_TOKEN,
-      callbackManager: CallbackManager.fromHandlers(handlers),
     });
-
     model.verbose = true;
-
     const resp = String(
       await model
-        .invoke(
-          `
-        ONLY generate plain sentences without prefix of who is speaking. DO NOT use ${companion.name}: prefix. 
-
-        ${companion.instructions}
-
-        Below are relevant details about ${companion.name}'s past and the conversation you are in.
-        ${relevantHistory}
-
-
-        ${recentChatHistory}\n${companion.name}:`,
+        .generate(
+          [
+            `ONLY generate plain sentences without prefix of who is speaking. DO NOT use ${companion.name}: prefix.
+            ${companion.instructions}
+            Below are relevant details about ${companion.name}'s past and the conversation you are in.
+            ${relevantHistory}
+            
+            ${recentChatHistory}\n${companion.name}:`,
+          ],
+          {},
+          [handlers],
         )
+        .then((x) => x.generations[0][0].text)
         .catch(console.error),
     );
 
@@ -113,13 +111,8 @@ export async function POST(
 
     await memoryManager.writeToHistory('' + response.trim(), companionKey);
 
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-var-requires
-    const Readable = require('stream').Readable;
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call
     const s = new Readable();
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
     s.push(response);
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
     s.push(null);
     if (response !== undefined && response.length > 1) {
       void memoryManager.writeToHistory('' + response.trim(), companionKey);
@@ -132,7 +125,7 @@ export async function POST(
       });
     }
 
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+    //@ts-expect-error works anyway
     return new StreamingTextResponse(s);
   } catch (e) {
     console.error('[CHAT_POST]', e);

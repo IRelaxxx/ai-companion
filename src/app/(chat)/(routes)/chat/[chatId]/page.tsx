@@ -18,12 +18,14 @@ export default async function ChatIdPage({ params }: ChatIdPageProps) {
   const session = await auth();
   if (!session?.user?.id) {
     // should already be handled by middleware
+    console.log('no session');
     return redirect('/');
   }
   const companion = (await db.query.companions.findFirst({
     where: eq(companions.id, params.chatId),
   })) satisfies Companion | undefined;
   if (!companion) {
+    console.log('no Companion');
     return redirect('/');
   }
 
@@ -34,9 +36,6 @@ export default async function ChatIdPage({ params }: ChatIdPageProps) {
     ),
     orderBy: asc(messages.createdAt),
   });
-  if (companionMessages.length === 0) {
-    return redirect('/');
-  }
 
   const messageCount = await db
     .select({
@@ -45,6 +44,8 @@ export default async function ChatIdPage({ params }: ChatIdPageProps) {
     .from(messages)
     .where(eq(messages.companionId, companion.id));
   if (messageCount.length === 0) {
+    console.log('no messageCount');
+
     return redirect('/');
   }
 

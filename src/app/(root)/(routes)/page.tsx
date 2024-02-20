@@ -41,7 +41,7 @@ export default async function Home({ searchParams }: RootPageProps) {
         searchParams.categoryId && searchParams.categoryId !== ''
           ? eq(companions.categoryId, searchParams.categoryId)
           : sql`true`,
-        sql`lower(${companions.name}) like ${`%${searchParams.name.toLowerCase()}%`}`,
+        sql`lower(${companions.name}) like ${`%${searchParams.name?.toLowerCase()}%`}`,
       ),
     )
     .groupBy(companions.id)

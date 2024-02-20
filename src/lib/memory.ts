@@ -1,7 +1,7 @@
+import { Chroma as ChromaStore } from '@langchain/community/vectorstores/chroma';
+import { OpenAIEmbeddings } from '@langchain/openai';
 import { Redis } from '@upstash/redis';
 import { ChromaClient } from 'chromadb';
-import { OpenAIEmbeddings } from 'langchain/embeddings/openai';
-import { Chroma as ChromaStore } from 'langchain/vectorstores/chroma';
 
 import { env } from '@/env.mjs';
 

@@ -57,8 +57,8 @@ export const messages = createTable(
     role: mysqlEnum('role', ROLE_VALUES).notNull(),
     content: text('content').notNull(),
 
-    companionId: char('id', { length: 36 }).notNull(),
-    userId: varchar('id', { length: 255 }).notNull(),
+    companionId: char('companionId', { length: 36 }).notNull(),
+    userId: varchar('userId', { length: 255 }).notNull(),
     ...MYSQL_TIMESTAMPS,
   },
   (message) => ({

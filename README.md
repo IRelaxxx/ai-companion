@@ -13,3 +13,5 @@ With the following changes:
 - .env validation using `@t3-oss/env-nextjs`
 
 - server actions instead of api routes
+
+- local chroma instead of pinecone

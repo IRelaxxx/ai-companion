@@ -38,6 +38,7 @@ export class MemoryManager {
           collectionMetadata: {
             'hnsw:space': 'cosine',
           },
+          url: env.CHROMA_URL,
         },
       );
     } else {
@@ -48,6 +49,7 @@ export class MemoryManager {
           collectionMetadata: {
             'hnsw:space': 'cosine',
           },
+          url: env.CHROMA_URL,
         },
       );
     }

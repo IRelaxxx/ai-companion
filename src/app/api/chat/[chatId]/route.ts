@@ -3,6 +3,7 @@ import { LangChainStream, StreamingTextResponse } from 'ai';
 import { eq } from 'drizzle-orm';
 import { NextResponse } from 'next/server';
 import { Readable } from 'node:stream';
+import { z } from 'zod';
 
 import { env } from '@/env.mjs';
 import { auth } from '@/lib/auth';
@@ -13,14 +14,26 @@ import { rateLimit } from '@/lib/rate-limit';
 
 export const runtime = 'nodejs';
 
+const requestBodySchema = z
+  .object({
+    prompt: z.string().min(1),
+  })
+  .strict();
+
 export async function POST(
   request: Request,
   { params }: { params: { chatId: string } },
 ) {
   try {
-    // TODO: validate
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-    const { prompt } = (await request.json()) as { prompt: string };
+    console.log(env.UPSTASH_REDIS_REST_TOKEN);
+    const parseResult = await requestBodySchema.safeParseAsync(
+      await request.json(),
+    );
+    if (!parseResult.success) {
+      console.error('Error parsing body', parseResult.error);
+      return new NextResponse('Bad Request', { status: 400 });
+    }
+    const prompt = parseResult.data.prompt;
 
     const session = await auth();
     if (!session?.user?.name || !session?.user?.id) {

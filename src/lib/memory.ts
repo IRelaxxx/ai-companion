@@ -55,12 +55,9 @@ export class MemoryManager {
     }
   }
 
-  public async vectorSearch(
-    recentChatHistory: string,
-    companionFileName: string,
-  ) {
+  public async vectorSearch(recentChatHistory: string, companion: string) {
     const similarDocs = await this.vectorStore
-      .similaritySearch(recentChatHistory, 3, { fileName: companionFileName })
+      .similaritySearch(recentChatHistory, 3, { companion: companion })
       .catch((err) => {
         console.error('Failed to get vector search results', err);
       });
@@ -129,5 +126,9 @@ export class MemoryManager {
       const line = content[i];
       await this.history.zadd(key, { score: i, member: line });
     }
+  }
+
+  public asRetriever() {
+    return this.vectorStore.asRetriever();
   }
 }

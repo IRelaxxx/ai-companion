@@ -28,7 +28,7 @@ export default function ChatClient({
 
   const { input, isLoading, handleInputChange, handleSubmit, setInput } =
     useCompletion({
-      api: `/api/chat/${companion.id}`,
+      api: `/api/chatv2/${companion.id}`,
       onFinish(_, completion) {
         const systemMessage = {
           role: 'system',
